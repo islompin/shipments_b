@@ -1,0 +1,210 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Location {
+  id        Int      @id @default(autoincrement())
+  city      String   @db.VarChar(300)
+  state     String?
+  latitude  String
+  longitude String
+  county    String?
+  loads     Loads[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Company {
+  id            Int      @id @default(autoincrement())
+  companyName   String
+  companyAdress String
+  companyState  String?
+  companyUrl    String?
+  companyType   String?
+  loads         Loads[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Contact {
+  id           Int      @id @default(autoincrement())
+  contactName  String?
+  contactValue String
+  contactType  String
+  loads        Loads[]
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Credit {
+  id             Int      @id @default(autoincrement())
+  daysToPay      String
+  creditScore    String
+  creditScoreUrl String?
+  daysToPayUrl   String?
+  loads          Loads[]
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}
+
+model Users {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  userName  String?
+  email     String?
+  phone     String?
+  loads     Loads[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model DatOne {
+  id                     Int      @id @default(autoincrement())
+  postingId              String
+  earliestWhen           String
+  latestWhen             String
+  brokerDataRemoved      String?
+  combinedOfficeId       Int
+  officeId               String?
+  comments               String?
+  isBookable             Boolean
+  isFromPrivateNetwork   Boolean
+  isNegotiable           Boolean
+  isQuickPayable         Boolean
+  hasTiaMembership       Boolean
+  groupId                String?
+  factoring              String?
+  matchingPostingId      String
+  maximumLengthFeet      Int
+  maximumWeightPounds    Int
+  fullPartial            String
+  assetType              String?
+  rateUsd                Int
+  basis                  String?
+  bids                   String?
+  worklist               String?
+  tripLengthMethod       String?
+  tripLengthMiles        Int
+  systemStatus           String?
+  status                 String?
+  servicedWhen           String?
+  relevanceScore         Int
+  ranked                 Boolean
+  postersReferenceId     String?
+  postingCancelledWhen   String?
+  postingExpiresWhen     String?
+  privateNetworkRateInfo String?
+  loads                  Loads[]
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+}
+
+model DatPower {
+  id                 Int      @id @default(autoincrement())
+  age                String
+  ageInMilliseconds  String
+  inExactColumnMap   Int
+  isAvailable        Boolean
+  routeUrl           String
+  order              Int
+  isLoad             Boolean
+  officeLocation     String
+  referenceState     String
+  isTiaMember        Boolean
+  factorableUrl      String
+  assurableUrl       String
+  officeId           Int?
+  isPreferredOffice  Boolean
+  isBlockedOffice    Boolean
+  postersReferenceId String
+  bookItNowType      String?
+  bookItNowTooltip   String?
+  bookItNowFormatted String?
+  bookItNow          String?
+  isBookItNow        Boolean
+  isTaken            Boolean
+  isWorked           Boolean
+  showActivity       Boolean
+  takeUserId         Int
+  workedStatusText   String?
+  workedStatusValue  String?
+  workedNote         String?
+  workedInitials     String?
+  takenInitials      String?
+  searcherDotNumber  Int
+  searcherMcNumber   Int
+  loads               Loads[]
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+model TrucksEdge {
+  id                       Int      @id @default(autoincrement())
+  ageInMilliseconds        String
+  equipmentType            String
+  isLoad                   Boolean
+  servicedDate             String
+  endDate                  String
+  assetType                String
+  earliest                 String
+  latest                   String
+  isActive                 Boolean
+  isTiaMember              Boolean
+  officeId                 Int
+  combinedOfficeId         String
+  referenceState           String
+  isTripMilesAir           Boolean
+  isOriginDeadheadMilesAir Boolean
+  isP3Member               Boolean
+  isTriumphPay             Boolean
+  searcherDotNumber        Int
+  searcherMcNumber         Int
+  loads                    Loads[]
+  createdAt                DateTime @default(now())
+  updatedAt                DateTime @updatedAt
+}
+
+model Loads {
+  id                       Int         @id @default(autoincrement())
+  matchId                  String
+  registryId               String
+  source                   String
+  isPartial                Boolean
+  isFactorable             Boolean
+  isAssurable              Boolean
+  servicedDate             String
+  deadheadMilesOrigin      String
+  deadheadMilesDestination String
+  weight                   String
+  length                   String
+  rate                     String
+  tripMiles                String
+  equipmentClass           String
+  pickupDate               String
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+  user                     Users       @relation(fields: [userId], references: [id])
+  userId                   Int
+  credit                   Credit      @relation(fields: [creditId], references: [id])
+  creditId                 Int
+  contact                  Contact     @relation(fields: [contactId], references: [id])
+  contactId                Int
+  company                  Company     @relation(fields: [companyId], references: [id])
+  companyId                Int
+  location                 Location    @relation(fields: [locationId], references: [id])
+  locationId               Int
+  DatOne                   DatOne?     @relation(fields: [datOneId], references: [id])
+  datOneId                 Int?
+  DatPower                 DatPower?   @relation(fields: [datPowerId], references: [id])
+  datPowerId               Int?
+  TrucksEdge               TrucksEdge? @relation(fields: [trucksEdgeId], references: [id])
+  trucksEdgeId             Int?
+}
